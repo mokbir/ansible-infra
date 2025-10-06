@@ -1,0 +1,27 @@
+- hosts: web
+  become: yes
+  tasks:
+    - name: Install dépendances
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+       
+    - name: Installer Docker
+      apt:
+        name: docker.io 
+        state: present
+        update_cache: yes
+    
+    - name: Lancer conteneur Nginx
+      docker_container:
+        name: nginx
+        image: nginx:latest
+        state: started
+        ports:
+          - "80:80"
+        
